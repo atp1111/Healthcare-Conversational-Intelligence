@@ -1,39 +1,52 @@
-# Healthcare-Conversational-Intelligence
-# Multimodal Call Intelligence Platform
+# VocalVitals: Multimodal Healthcare Intelligence
 
-[![PySpark](https://img.shields.io/badge/PySpark-3.4-orange)](https://spark.apache.org/)
-[![HuggingFace](https://img.shields.io/badge/Models-Wav2Vec2%20%2B%20Llama3-yellow)](https://huggingface.co/)
-[![Azure](https://img.shields.io/badge/Cloud-Azure%20Databricks-blue)](https://azure.microsoft.com/)
+![Banner](https://img.shields.io/badge/Status-Production-success?style=for-the-badge)
+![Tech](https://img.shields.io/badge/Stack-PySpark_|_Llama_3_|_Wav2Vec2_|_Azure-blue?style=for-the-badge)
+![Impact](https://img.shields.io/badge/Impact-$31k_Annual_Savings-green?style=for-the-badge)
 
-A production-grade, multimodal AI pipeline designed to analyze enterprise call center interactions. This system fuses **Audio Analysis** (Wav2Vec2) and **Text Analysis** (Llama 3 70B) to provide a 360-degree view of customer sentiment, agent performance, and compliance.
+> **A multimodal AI pipeline that fuses acoustic emotion detection (Audio) with semantic sentiment analysis (Text) to automate quality assurance for patient interactions.**
 
-## 💼 Business Impact
+---
 
-In high-volume call centers, manual QA can only audit ~2% of calls. This automated pipeline enables **100% coverage**, allowing the organization to:
-* **Detect Churn Risk:** By correlating high-energy audio (Anger) with negative text sentiment.
-* **Automate Compliance:** Detecting billing information and mandatory disclosures automatically.
-* **Scale Efficiently:** Optimized to process thousands of audio hours using distributed Spark computing and GPU acceleration.
+## 🚀 Business Impact & Results
 
-## 🏗 Architecture
+This system was deployed to process **50,000+ patient files**, replacing manual auditing with automated intelligence.
 
-The system operates on a Lakehouse architecture within Azure Databricks. It processes data in two parallel streams that merge for final analysis.
+| Metric | Improvement | Context |
+| :--- | :--- | :--- |
+| **💰 Cost Savings** | **$31,000 / yr** | Reduced operational overhead for manual QA teams. |
+| **⚡ Compute Efficiency** | **12% Reduction** | Optimized inference costs via PySpark batching & PyTorch threading. |
+| **⏱️ Time Saved** | **10% Reduction** | Reduced manual call review time via automated Power BI dashboards. |
+| **🔍 Scale** | **50k+ Files** | Successfully processed large-scale historical archives on Azure Databricks. |
+
+---
+
+## 🧠 System Architecture
+
+The pipeline operates on a **Lakehouse Architecture** within Azure Databricks. It splits raw customer service calls into two parallel processing streams—Audio and Text—before fusing them for final analysis.
 
 ```mermaid
 graph TD
-    A[Raw Call Audio] -->|Speaker Diarization| B[Diarized Segments]
-    
-    subgraph Audio_Pipeline_Wav2Vec2
-    B -->|Fetch Blob Data| C[Audio Slicer]
-    C -->|Threaded Inference| D[Wav2Vec2 Emotion Model]
-    D -->|Output| E[Acoustic Emotion Score]
+    subgraph Ingestion_Layer
+    A[Raw Audio Files<br/>(Azure Blob Storage)] -->|Spark Read| B{Preprocessing}
+    B -->|Filter Silence| C[Valid Segments]
     end
-    
-    subgraph Text_Pipeline_Llama3
-    B -->|Aggregated Transcripts| F[Prompt Engineering]
-    F -->|Batch AI Query| G[Llama 70B Inference]
-    G -->|Output| H[Semantic Sentiment & Topics]
+
+    subgraph Audio_Physics_Engine
+    C -->|Threaded Slicing| D[Wav2Vec2 Model]
+    D -->|Acoustic Feature Extraction| E[Emotion Logits]
+    E -->|Softmax| F[Tone Score<br/>(Anger/Fear/Happy)]
     end
-    
-    E --> I{Multimodal Fusion}
-    H --> I
-    I --> J[Final Dashboard / Delta Table]
+
+    subgraph Semantic_Engine
+    C -->|Speaker Diarization| G[Transcripts]
+    G -->|Prompt Engineering| H[Llama 3 (70B)]
+    H -->|Batch Inference| I[Semantic Context]
+    I -->|JSON Parsing| J[Compliance Flags<br/>(Billing/HIPAA)]
+    end
+
+    subgraph Analytics_Layer
+    F --> K[Delta Lake<br/>Fusion Table]
+    J --> K
+    K --> L[Power BI Dashboard]
+    end

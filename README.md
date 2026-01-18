@@ -45,6 +45,7 @@ graph TD
     I -->|JSON Parsing| J["Compliance Flags<br/>(Billing/HIPAA)"]
     end
 
+```
 🛠️ Technical Walkthrough
 Phase 1: The Audio Physics Engine (audio_emotion_spark.py)
 Goal: Detect HOW the patient is speaking, not just what they are saying.
@@ -101,9 +102,3 @@ Azure Databricks (Runtime 13.0+ ML)
 GPU Cluster (T4 or A10 recommended)
 
 HuggingFace API Token
-
-    subgraph Analytics_Layer
-    F --> K["Delta Lake<br/>Fusion Table"]
-    J --> K
-    K --> L[Power BI Dashboard]
-    end
